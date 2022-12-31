@@ -1,9 +1,11 @@
 import React, {createContext, useState} from 'react';
 import {Grommet} from 'grommet';
-import Main from "./Main";
 import * as themes from './theme';
 import SideHeader from "./components/SideHeader";
 import {userContextDefaultValue} from "./models/UserManagement";
+import {BrowserRouter} from "react-router-dom";
+import Root from "./pages/Root";
+
 
 
 export const UserContext = createContext(userContextDefaultValue);
@@ -14,12 +16,14 @@ function App() {
 
   return (
       <>
-          <UserContext.Provider value={{state: user, setState: setUser}}>
-              <Grommet theme={themes.theme_evev}>
-                <SideHeader />
-                <Main/>
-             </Grommet>
-          </UserContext.Provider>
+          <BrowserRouter>
+            <UserContext.Provider value={{state: user, setState: setUser}}>
+                <Grommet theme={themes.theme_evev}>
+                    <SideHeader/>
+                    <Root />
+                </Grommet>
+            </UserContext.Provider>
+          </BrowserRouter>
       </>
   )
 }

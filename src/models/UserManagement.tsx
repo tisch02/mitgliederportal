@@ -1,6 +1,4 @@
 
-
-
 export interface UserContextType{
     state: User,
     setState: (state: User) => void
