@@ -1,11 +1,13 @@
 import {Box, Button, CheckBox, Heading, TextInput} from "grommet";
-import {FormView, Hide, User, View} from "grommet-icons";
+import {FormView, Hide, User} from "grommet-icons";
 import {useContext, useState} from "react";
 import {UserContext} from "../App";
 import {UserContextType} from "../models/UserManagement";
+import {useNavigate} from "react-router-dom";
 
-function PerformLogin(username: string, pass: string, remeberMe: boolean, context: UserContextType){
-    context.setState({name: username, username: username, roles: []})
+function PerformLogin(username: string, pass: string, rememberMe: boolean, context: UserContextType): boolean {
+    context.setState({name: username, username: username, roles: ["admin"]})
+    return true;
 }
 
 const Login = () => {
@@ -15,6 +17,7 @@ const Login = () => {
     const [rememberMe, setRememberMe] = useState(false);
     const userContext = useContext(UserContext);
 
+    const navigate = useNavigate();
 
 
     return (
@@ -79,7 +82,9 @@ const Login = () => {
 
 
                     <Button primary label={"Anmelden"} onClick={() => {
-                        PerformLogin(usernameValue, passValue, rememberMe, userContext);
+                        if (PerformLogin(usernameValue, passValue, rememberMe, userContext)) {
+                            navigate("/");
+                        }
                     }}/>
                 </Box>
             </Box>

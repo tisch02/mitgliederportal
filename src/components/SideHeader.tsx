@@ -3,18 +3,28 @@ import {AppsRounded, Login} from "grommet-icons";
 import logo_img from "../resources/evev_logo_highres.png";
 import {useContext} from "react";
 import {UserContext} from "../App";
-import {NavLink, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import LoggedIn, {isLoggedIn} from "./LoggedIn";
+import ConditionalRendering, {isRendered} from "./ConditionalRendering";
 
-const items = [
-    {label: "Profil", link: "/account"},
-    {label: "Personen", link: "/members"},
-    {label: "Admin", link: "/admin"},
+interface navbarItem {
+    label: string,
+    link: string,
+    loggedIn?: boolean,
+    roles?: string[],
+}
+
+const items: navbarItem[] = [
+    {label: "Profil", link: "/account", loggedIn: true},
+    {label: "Personen", link: "/members", loggedIn: true},
+    {label: "Admin", link: "/admin", loggedIn: true, roles: ["admin"]},
 ];
 
 const SideHeader = () => {
 
     const userContext = useContext(UserContext);
     const navigate = useNavigate();
+
 
     return (
       <Header background={"light-3"} pad={"medium"} height={"xsmall"}>
@@ -43,18 +53,42 @@ const SideHeader = () => {
                             dropProps={{ align: { top: 'bottom', right: 'right' } }}
                             icon={<AppsRounded color="brand" />}
                             items={items.map((item) => {
-                                return {
+
+                                const element = {
                                     label: <Box pad="small">{item.label}</Box>,
                                     onClick: () => navigate(item.link),
                                 }
-                            })}
+
+                                if (((item.loggedIn ?? false) || (item.roles !== undefined))
+                                    && isLoggedIn(userContext)
+                                    && isRendered(userContext, item.roles ?? [])){
+                                        return element;
+                                }
+
+                                return {label: "hide"};
+
+                            }).filter((item) => item.label !== "hide")}
                         />
                     </Box>
                   ) : (
                       <Box justify="end" direction="row" gap="medium">
-                          {items.map(item => (
-                                <Anchor key={item.label} onClick={() => navigate(item.link)}>{item.label}</Anchor>
-                          ))}
+                          {items.map(item => {
+
+                              const link = <Anchor key={item.label} onClick={() => navigate(item.link)}>{item.label}</Anchor>
+
+                              if ((item.loggedIn ?? false) || (item.roles !== undefined)){
+                                  return (
+                                      <>
+                                        <LoggedIn>
+                                            <ConditionalRendering roles={item.roles ?? []}>
+                                                {link}
+                                            </ConditionalRendering>
+                                        </LoggedIn>
+                                      </>);
+                              }
+
+                              return link;
+                          })}
                       </Box>
                   )
               }
@@ -62,7 +96,7 @@ const SideHeader = () => {
 
           </ResponsiveContext.Consumer>
               <Anchor onClick={() => navigate("login")}>
-                  <Avatar background="dark-4">
+                  <Avatar background={"dark-4"}>
                       {userContext.state.name !== ""
                           ? userContext.state.name.toUpperCase().split(" ").slice(0, 2).map((s) => s[0]).join("")
                           : <Login color="light-2" />}
