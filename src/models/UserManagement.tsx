@@ -4,7 +4,7 @@ export interface UserContextType{
     setState: (state: User) => void
 }
 
-export const defaultUser: User =  {name: "", username: "", roles: []}
+export const defaultUser: User =  {name: "", username: "", sessionKey: "", roles: [], expiration: new Date()}
 
 export const userContextDefaultValue: UserContextType = {
     state: defaultUser,
@@ -14,5 +14,14 @@ export const userContextDefaultValue: UserContextType = {
 export interface User {
     name: string,
     username: string,
+    sessionKey: string,
+    expiration: Date,
+    roles: string[]
+}
+
+export interface UserModel{
+    id: string,
+    username: string,
+    name: string,
     roles: string[]
 }

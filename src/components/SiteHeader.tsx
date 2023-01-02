@@ -20,7 +20,7 @@ const items: navbarItem[] = [
     {label: "Admin", link: "/admin", loggedIn: true, roles: ["admin"]},
 ];
 
-const SideHeader = () => {
+const SiteHeader = () => {
 
     const userContext = useContext(UserContext);
     const navigate = useNavigate();
@@ -108,4 +108,4 @@ const SideHeader = () => {
       </Header>
     );
 }
-export default SideHeader;
+export default SiteHeader;

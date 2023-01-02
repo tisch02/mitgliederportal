@@ -4,10 +4,21 @@ import {useContext, useState} from "react";
 import {UserContext} from "../App";
 import {UserContextType} from "../models/UserManagement";
 import {useNavigate} from "react-router-dom";
+import {sha256} from "js-sha256";
+import {loginWithPassword} from "../lib/LoginService";
 
-function PerformLogin(username: string, pass: string, rememberMe: boolean, context: UserContextType): boolean {
-    context.setState({name: username, username: username, roles: ["admin"]})
-    return true;
+async function PerformLogin(username: string, pass: string, rememberMe: boolean, context: UserContextType) {
+
+    const data = await loginWithPassword(username, pass, rememberMe);
+
+    if (data.result){
+        context.setState(data.data)
+    }else{
+        console.log(data.data["message"])
+    }
+
+    return data.result
+
 }
 
 const Login = () => {
@@ -81,8 +92,8 @@ const Login = () => {
                     </Box>
 
 
-                    <Button primary label={"Anmelden"} onClick={() => {
-                        if (PerformLogin(usernameValue, passValue, rememberMe, userContext)) {
+                    <Button primary label={"Anmelden"} onClick={async () => {
+                        if (await PerformLogin(usernameValue, sha256(passValue), rememberMe, userContext)) {
                             navigate("/");
                         }
                     }}/>

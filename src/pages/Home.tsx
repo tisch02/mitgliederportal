@@ -7,10 +7,6 @@ import {Navigate} from "react-router-dom";
 const Home = () => {
     return (<>
 
-            <LoggedOut>
-                <Navigate to={"login"}/>
-            </LoggedOut>
-
             <p>Home</p>
             <Button primary label={"Test"}/>
             <ConditionalRendering roles={["admin", "user"]}>

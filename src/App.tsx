@@ -1,10 +1,11 @@
 import React, {createContext, useState} from 'react';
 import {Grommet} from 'grommet';
 import * as themes from './theme';
-import SideHeader from "./components/SideHeader";
+import SiteHeader from "./components/SiteHeader";
 import {userContextDefaultValue} from "./models/UserManagement";
 import {BrowserRouter} from "react-router-dom";
 import Root from "./pages/Root";
+import LoginService from "./lib/LoginService";
 
 
 
@@ -19,7 +20,8 @@ function App() {
           <BrowserRouter>
             <UserContext.Provider value={{state: user, setState: setUser}}>
                 <Grommet theme={themes.theme_evev}>
-                    <SideHeader/>
+                    <LoginService/>
+                    <SiteHeader/>
                     <Root />
                 </Grommet>
             </UserContext.Provider>
